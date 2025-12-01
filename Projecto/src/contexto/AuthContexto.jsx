@@ -1,32 +1,34 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
+  const [IsLogged, setIsLogged] = useState(false);
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('userData');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      setUser(parsed);
+      setIsLogged(true);
+    }
+  }, []);
 
   const login = (userData) => {
     setUser(userData);
-    // Podés guardar en localStorage si querés persistencia:
-    localStorage.setItem("user", JSON.stringify(userData));
+    setIsLogged(true);
+    localStorage.setItem('userData', JSON.stringify(userData));
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("user");
+    setIsLogged(false);
+    localStorage.removeItem('userData');
   };
 
-  // Si querés recuperar el usuario al recargar la página, usá useEffect:
-  // import { useEffect } from "react";
-  // useEffect(() => {
-  //   const savedUser = localStorage.getItem("user");
-  //   if (savedUser) setUser(JSON.parse(savedUser));
-  // }, []);
-
-  const IsLogged = !!user;
-
   return (
-    <AuthContext.Provider value={{ user, IsLogged, login, logout }}>
+    <AuthContext.Provider value={{ IsLogged, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
