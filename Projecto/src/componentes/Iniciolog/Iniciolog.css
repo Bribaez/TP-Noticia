@@ -1,27 +1,21 @@
 .iniciolog-container {
-  max-width: 1200px; /* más ancho */
-   min-width: 600px; /* para que no se achique demasiado en pantallas pequeñas */
-  margin-left: auto;
-  margin-right: auto;
-  padding: 1.5rem 2rem; 
+  width: 90%;                  /* ahora se adapta */
+  max-width: 600px;            /* tamaño ideal */
+  margin: 50px auto;           /* centrado vertical suave SIN romper nada */
+  padding: 1.5rem 2rem;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 
-  height: auto;
-   min-height: 250px;
   display: flex;
   flex-direction: column;
   justify-content: center;
 
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;          /* antes era absolute (rompía todo) */
+  transform: none;             /* ya no se debe usar */
 }
 
-
-
+/* Título */
 .iniciolog-title {
   text-align: center;
   color: #ff416c;
@@ -30,6 +24,7 @@
   font-size: 2rem;
 }
 
+/* Filas */
 .iniciolog-row {
   display: flex;
   align-items: center;
@@ -37,12 +32,14 @@
   margin-bottom: 1rem;
 }
 
+/* Labels */
 .iniciolog-label {
   min-width: 110px;
   font-weight: bold;
   color: #343a40;
 }
 
+/* Valor */
 .iniciolog-value {
   flex: 1;
   font-size: 1rem;
@@ -50,6 +47,7 @@
   color: #212529;
 }
 
+/* Inputs */
 .iniciolog-input {
   flex: 1;
   padding: 6px 8px;
@@ -65,6 +63,7 @@
   box-shadow: 0 0 0 0.2rem rgba(214, 51, 108, 0.25);
 }
 
+/* Botones */
 .btn-edit {
   background-color: transparent;
   border: none;
@@ -98,6 +97,28 @@
 .icon-btn {
   font-size: 20px;
   padding: 0 6px;
+}
+
+/* Mobile fix */
+@media (max-width: 500px) {
+  .iniciolog-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .iniciolog-label {
+    min-width: unset;
+  }
+
+  .btn-edit,
+  .btn-save {
+    align-self: flex-end;
+  }
+
+  .iniciolog-input,
+  .iniciolog-value {
+    width: 100%;
+  }
 }
 
 .loading {

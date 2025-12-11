@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Pronostico.css";
 
 const ciudades = [
@@ -6,41 +6,70 @@ const ciudades = [
   { nombre: "La Plata", valor: "La Plata" },
   { nombre: "Quilmes", valor: "Quilmes" },
   { nombre: "Avellaneda", valor: "Avellaneda" },
-  { nombre: "Morón", valor: "Morón" },
+  { nombre: "Morón", valor: "Moron" },
   { nombre: "Lomas de Zamora", valor: "Lomas de Zamora" },
   { nombre: "San Isidro", valor: "San Isidro" },
-  { nombre: "Vicente López", valor: "Vicente López" },
+  { nombre: "Vicente López", valor: "Vicente Lopez" },
 ];
 
-// Datos simulados para el clima
-const climaSimulado = {
-  "Buenos Aires": { temp: 16, desc: "Nublado", icon: "☁️", humedad: 60, viento: 4 },
-  "La Plata": { temp: 18, desc: "Soleado", icon: "☀️", humedad: 55, viento: 3 },
-  "Quilmes": { temp: 15, desc: "Lluvia ligera", icon: "🌧️", humedad: 80, viento: 5 },
-  "Avellaneda": { temp: 17, desc: "Parcialmente nublado", icon: "⛅", humedad: 65, viento: 3 },
-  "Morón": { temp: 14, desc: "Soleado", icon: "☀️", humedad: 50, viento: 2 },
-  "Lomas de Zamora": { temp: 16, desc: "Nublado", icon: "☁️", humedad: 70, viento: 4 },
-  "San Isidro": { temp: 19, desc: "Soleado", icon: "☀️", humedad: 40, viento: 3 },
-  "Vicente López": { temp: 15, desc: "Lluvia ligera", icon: "🌧️", humedad: 85, viento: 5 },
-};
+// TU API KEY
+const API_KEY = "de46aac53e89de96a434e0c9c9330ca1";
 
 export function Pronostico() {
+  const [climas, setClimas] = useState({});
+
+  useEffect(() => {
+    ciudades.forEach(async (ciudad) => {
+      try {
+        const respuesta = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?q=${ciudad.valor}&appid=${API_KEY}&units=metric&lang=es`
+        );
+
+        const data = await respuesta.json();
+
+        setClimas((prev) => ({
+          ...prev,
+          [ciudad.valor]: {
+            temp: data.main.temp,
+            desc: data.weather[0].description,
+            icon: data.weather[0].icon,
+            humedad: data.main.humidity,
+            viento: data.wind.speed,
+          },
+        }));
+      } catch (error) {
+        console.log("Error cargando clima de " + ciudad.valor, error);
+      }
+    });
+  }, []);
+
   return (
     <div className="pronostico-container">
       <h2 className="pronostico-title">Pronóstico del Clima AMBA</h2>
 
       <div className="cards-container">
         {ciudades.map(({ nombre, valor }) => {
-          const clima = climaSimulado[valor];
+          const clima = climas[valor];
+
           return (
             <div key={nombre} className="card">
               <h3>{nombre}</h3>
-              <div className="card-icon" style={{ fontSize: "48px" }}>
-                {clima.icon}
-              </div>
-              <p>{clima.temp}°C - {clima.desc}</p>
-              <p>Humedad: {clima.humedad}%</p>
-              <p>Viento: {clima.viento} m/s</p>
+
+              {!clima ? (
+                <p>Cargando...</p>
+              ) : (
+                <>
+                  <img
+                    src={`https://openweathermap.org/img/wn/${clima.icon}@2x.png`}
+                    alt="icono clima"
+                    className="card-icon"
+                  />
+
+                  <p>{clima.temp}°C - {clima.desc}</p>
+                  <p>Humedad: {clima.humedad}%</p>
+                  <p>Viento: {clima.viento} m/s</p>
+                </>
+              )}
             </div>
           );
         })}

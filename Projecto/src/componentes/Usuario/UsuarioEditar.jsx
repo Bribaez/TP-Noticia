@@ -58,14 +58,17 @@ export function EditarUsuario() {
   return (
     <div
       className="d-flex justify-content-center align-items-center"
-      style={{ minHeight: 'calc(100vh - 150px)' }} // ajusta a tu header/footer
+      style={{
+        minHeight: '100vh',
+        padding: '20px'
+      }}
     >
-      <div className="container" style={{ maxWidth: '480px' }}>
+      <div className="card p-4 shadow-lg rounded-4" style={{ width: '420px' }}>
         <h2 className="mb-4 text-center" style={{ color: '#28a745' }}>
           Editar Usuario
         </h2>
 
-        <form onSubmit={handleSubmit} className="card p-4 shadow rounded">
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="usuario" className="form-label fw-semibold">
               Nombre de Usuario
